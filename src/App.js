@@ -17,11 +17,17 @@ const App = () => {
   const [todos, setTodos] = useState([]);
   const [popupActive, setPopupActive] = useState(false);
   const [newTodo, setNewTodo] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const GetTodos = async () => {
     await axios
       .get(`${API_BASE}/todos`)
-      .then((res) => setTodos(res.data))
+      .then((res) => {
+        if (!res.data) {
+          setLoading(true);
+        }
+        setTodos(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -88,6 +94,7 @@ const App = () => {
             <h1>Welcome, to your Todos</h1>
             <h4>Your Tasks</h4>
           </div>
+          {loading ? <p>Loading todos</p> : ""}
           <Todos />
         </StyledApp>
       </AppContext.Provider>
